@@ -1,12 +1,19 @@
 # app.py
 from flask import Flask, render_template
-import os
+from flask_frozen import Freezer
 
 app = Flask(__name__)
+freezer = Freezer(app)
 
 @app.route('/')
 def home():
     return render_template('index.html')
 
+# This is required for Frozen-Flask to know what to freeze
+@freezer.register_generator
+def home():
+    yield '/'
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    freezer.freeze()  # Use this to build static files
+    # app.run(debug=True)  # Uncomment for local testing
